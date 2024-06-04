@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalLibrary Search</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #searchResults {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 600px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>RoyalLibrary Search</h1>
+<form id="searchForm">
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="Author"><br>
+
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" name="ISBN"><br>
+
+    <label for="pageNumber">Page Number:</label>
+    <input type="number" id="pageNumber" min="1" value="1" name="PageNumber"><br>
+
+    <label for="pageSize">Page Size:</label>
+    <input type="number" id="pageSize" min="1" max="100" value="10" name="PageSize"><br>
+
+    <button type="submit">Search</button>
+</form>
+<div id="searchResults"></div>
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const searchParams = new URLSearchParams(formData).toString();
+        fetch('http://localhost:5125/api/Book?' + searchParams)
+            .then(response => response.json())
+            .then(data => {
+                const searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = formatSearchResults(data.books);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function formatSearchResults(books) {
+        if (books && books.length > 0) {
+            let html = '<h2>Search Results</h2>';
+            html += '<ul>';
+            books.forEach(book => {
+                html += '<li>';
+                html += `<h3>${book.title}</h3>`;
+                html += `<p><strong>Author:</strong> ${book.firstName} ${book.lastName}</p>`;
+                html += `<p><strong>Copies:</strong> ${book.totalCopies} total, ${book.copiesInUse} in use</p>`;
+                html += `<p><strong>Type:</strong> ${book.type}</p>`;
+                html += `<p><strong>ISBN:</strong> ${book.isbn}</p>`;
+                html += `<p><strong>Category:</strong> ${book.category}</p>`;
+                html += '</li>';
+            });
+            html += '</ul>';
+            return html;
+        } else {
+            return '<p>No results found</p>';
+        }
+    }
+</script>
+</body>
+</html>
