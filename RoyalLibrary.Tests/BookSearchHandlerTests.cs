@@ -1,10 +1,5 @@
-using FluentAssertions;
 using FluentValidation.TestHelper;
-using MockQueryable.Moq;
-using Moq;
-using RoyalLibrary.Domain.Model;
 using RoyalLibrary.Features.Book;
-using RoyalLibrary.Infrastructure;
 
 namespace RoyalLibrary.Tests;
 
@@ -15,7 +10,7 @@ public class BookSearchHandlerTests
         {
             // Arrange
             var validator = new BookSearchHandler.BookSearchValidator();
-            var request = new BookSearchHandler.Request("John Doe", "1234567890");
+            var request = new BookSearchHandler.Request("John Doe", "1234567890", 1, 1);
 
             // Act
             var result = validator.TestValidate(request);
@@ -30,7 +25,7 @@ public class BookSearchHandlerTests
         {
             // Arrange
             var validator = new BookSearchHandler.BookSearchValidator();
-            var request = new BookSearchHandler.Request(author, isbn);
+            var request = new BookSearchHandler.Request(author, isbn, 1, 1);
 
             // Act
             var result = validator.TestValidate(request);
