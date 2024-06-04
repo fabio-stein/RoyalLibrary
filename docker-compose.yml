@@ -1,0 +1,6 @@
+﻿services:
+  royallibrary:
+    image: royallibrary
+    build:
+      context: .
+      dockerfile: Dockerfile
