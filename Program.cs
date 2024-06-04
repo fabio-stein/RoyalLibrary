@@ -14,6 +14,8 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
         builder.Services.AddDbContext<LibraryDbContext>(c =>
             c.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

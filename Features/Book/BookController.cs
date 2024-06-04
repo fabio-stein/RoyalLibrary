@@ -1,5 +1,5 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RoyalLibrary.Infrastructure;
 
 namespace RoyalLibrary.Features.Book;
 
@@ -8,8 +8,9 @@ namespace RoyalLibrary.Features.Book;
 public class BookController : ControllerBase
 {
     [HttpGet]
-    public IActionResult Index([FromServices] LibraryDbContext context)
+    public async Task<IActionResult> Index([FromServices] IMediator mediator)
     {
-        return Ok(context.Books.ToList());
+        var response = await mediator.Send(new BookSearchHandler.BookSearchRequest());
+        return Ok(response);
     }
 }
