@@ -7,7 +7,10 @@ This is a simple web application that allows users to search for books in the Ro
 
 To run the .NET project and access the search interface, follow these simple steps:
 
-1. **Run the .NET Project:**
+1. **Update the appsettings with your connection strings:**
+   It is expected you already have the db setup and running locally
+   
+3. **Run the .NET Project:**
    ```
    dotnet run
    ```
