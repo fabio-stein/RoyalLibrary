@@ -26,7 +26,7 @@ public class Program
 
         var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || true)//Using always true only for demo purpose
         {
             app.UseSwagger();
             app.UseSwaggerUI();
