@@ -3,11 +3,7 @@ using RoyalLibrary.Domain.Model;
 
 namespace RoyalLibrary.Infrastructure;
 
-public class LibraryDbContext : DbContext
+public class LibraryDbContext(DbContextOptions options) : DbContext(options)
 {
-    public LibraryDbContext(DbContextOptions options) : base(options)
-    {
-    }
-    
     public DbSet<Book> Books { get; set; }
 }
