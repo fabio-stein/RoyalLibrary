@@ -1,7 +1,7 @@
-﻿#Configuration not fully implemented!
+#Configuration not fully implemented!
 #I'd add the sql server to the docker compose
 #also trying to have som automatic initial setup for auto creating DB and running the init.sql
-services:
+ services:
   royallibrary:
     image: royallibrary
     build:
