@@ -1,11 +1,10 @@
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using RoyalLibrary.Infrastructure;
+using RoyalLibrary.Domain.Repository;
 
 namespace RoyalLibrary.Features.Book;
 
-public class BookSearchHandler(LibraryDbContext context)
+public class BookSearchHandler(IBookRepository repository)
     : IRequestHandler<BookSearchHandler.Request, BookSearchHandler.Response>
 {
     public record Request(string? Author, string? ISBN, int PageNumber, int PageSize) : IRequest<Response>;
@@ -13,27 +12,9 @@ public class BookSearchHandler(LibraryDbContext context)
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var query = context.Books.AsQueryable();
+        var pagedBooks = await repository.SearchBooksAsync(request.Author, request.ISBN, request.PageNumber, request.PageSize);
 
-        if (!string.IsNullOrEmpty(request.Author))
-        {
-            var authorKeywords = request.Author.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            foreach (var keyword in authorKeywords)
-            {
-                query = query.Where(book => book.FirstName.Contains(keyword) || book.LastName.Contains(keyword));
-            }
-        }
-
-        if (!string.IsNullOrEmpty(request.ISBN))
-        {
-            query = query.Where(book => book.ISBN == request.ISBN);
-        }
-
-        var skipAmount = (request.PageNumber - 1) * request.PageSize;
-        var pagedBooks = await query.Skip(skipAmount).Take(request.PageSize).ToListAsync(cancellationToken);
-
-        var response = new Response(pagedBooks);
-        return response;
+        return new Response(pagedBooks);
     }
 
     public class BookSearchValidator : AbstractValidator<Request>

@@ -1,7 +1,9 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RoyalLibrary.Domain.Repository;
 using RoyalLibrary.Infrastructure;
+using RoyalLibrary.Infrastructure.Repository;
 
 namespace RoyalLibrary;
 
@@ -20,6 +22,7 @@ public class Program
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        builder.Services.AddScoped<IBookRepository, BookRepository>();
 
         builder.Services.AddDbContext<LibraryDbContext>(c =>
             c.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
